@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResumeAI - AI-Powered Resume Tailor</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="logo">Resume<span>AI</span></div>
+
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#analyzer">Analyzer</a>
+            <a href="#about">About</a>
+        </div>
+
+        <div class="ai-status">
+            <span></span> AI Online
+        </div>
+    </nav>
+
+
+    <!-- HERO SECTION -->
+    <section id="home" class="hero">
+
+        <div class="hero-content">
+
+            <div class="badge">
+                ✦ AI-POWERED CAREER ASSISTANT
+            </div>
+
+            <h1>
+                Your Resume.<br>
+                <span>Your Dream Job.</span>
+            </h1>
+
+            <p>
+                Analyze your resume against any job description.
+                Discover skill gaps, identify formatting issues,
+                and get smart recommendations to improve your chances.
+            </p>
+
+            <button class="primary-btn" onclick="scrollToAnalyzer()">
+                Start Resume Analysis →
+            </button>
+
+            <div class="hero-stats">
+                <div>
+                    <strong>AI</strong>
+                    <small>Powered Analysis</small>
+                </div>
+
+                <div>
+                    <strong>Skills</strong>
+                    <small>Gap Detection</small>
+                </div>
+
+                <div>
+                    <strong>ATS</strong>
+                    <small>Friendly Insights</small>
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- AI PREVIEW CARD -->
+        <div class="ai-preview">
+
+            <div class="preview-top">
+                <div>
+                    <small>AI RESUME ANALYSIS</small>
+                    <h3>Software Developer</h3>
+                </div>
+
+                <div class="live-dot">●</div>
+            </div>
+
+
+            <div class="score-circle">
+                <div>
+                    <strong>78%</strong>
+                    <span>Match</span>
+                </div>
+            </div>
+
+
+            <div class="preview-items">
+
+                <div class="preview-item">
+                    <span class="green">✓</span>
+                    <div>
+                        <strong>Matching Skills</strong>
+                        <small>Python • SQL • Git</small>
+                    </div>
+                </div>
+
+                <div class="preview-item">
+                    <span class="red">!</span>
+                    <div>
+                        <strong>Skill Gaps</strong>
+                        <small>React • AWS • Docker</small>
+                    </div>
+                </div>
+
+                <div class="preview-item">
+                    <span class="yellow">⚠</span>
+                    <div>
+                        <strong>Formatting</strong>
+                        <small>3 improvements found</small>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ANALYZER SECTION -->
+    <section id="analyzer" class="analyzer">
+
+        <div class="section-title">
+
+            <div class="badge">
+                ✦ SMART ANALYZER
+            </div>
+
+            <h2>
+                Analyze Your <span>Resume</span>
+            </h2>
+
+            <p>
+                Paste your resume and the job description below.
+                Our AI will identify important areas for improvement.
+            </p>
+
+        </div>
+
+
+        <div class="input-grid">
+
+            <!-- RESUME -->
+            <div class="input-card">
+
+                <div class="card-heading">
+                    <div class="card-icon">📄</div>
+
+                    <div>
+                        <h3>Your Resume</h3>
+                        <p>Paste your resume content</p>
+                    </div>
+                </div>
+
+                <textarea
+                    id="resumeInput"
+                    placeholder="Paste your resume here...
+
+Example:
+
+B.E. Computer Science Engineering
+
+Skills:
+Python, Java, SQL, HTML, CSS
+
+Projects:
+College Event Management System
+
+Experience:
+Software Development Intern"
+                ></textarea>
+
+                <div class="character-count">
+                    Resume content
+                </div>
+
+            </div>
+
+
+            <!-- JOB -->
+            <div class="input-card">
+
+                <div class="card-heading">
+                    <div class="card-icon">💼</div>
+
+                    <div>
+                        <h3>Job Description</h3>
+                        <p>Paste the target job description</p>
+                    </div>
+                </div>
+
+                <textarea
+                    id="jobInput"
+                    placeholder="Paste the job description here...
+
+Example:
+
+We are looking for a Software Developer
+with experience in Python, React, SQL,
+Git, AWS and Docker.
+
+Strong problem-solving and communication
+skills are required."
+                ></textarea>
+
+                <div class="character-count">
+                    Job description
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <button class="analyze-btn" onclick="analyzeResume()">
+            <span>✦</span>
+            Analyze With AI
+            <span>→</span>
+        </button>
+
+
+        <div class="privacy-note">
+            🔒 Your resume data is used only for this analysis.
+        </div>
+
+    </section>
+
+
+    <!-- LOADING SECTION -->
+    <section id="loading" class="loading-section">
+
+        <div class="loader"></div>
+
+        <h2>AI is analyzing your resume...</h2>
+
+        <p id="loadingText">
+            Scanning resume content
+        </p>
+
+        <div class="loading-steps">
+
+            <div class="loading-step active">
+                ✓ Resume scanned
+            </div>
+
+            <div class="loading-step">
+                ◌ Comparing job requirements
+            </div>
+
+            <div class="loading-step">
+                ◌ Detecting skill gaps
+            </div>
+
+            <div class="loading-step">
+                ◌ Generating recommendations
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- RESULTS -->
+    <section id="results" class="results">
+
+        <div class="section-title">
+
+            <div class="badge">
+                ✦ ANALYSIS COMPLETE
+            </div>
+
+            <h2>
+                Your Resume <span>Insights</span>
+            </h2>
+
+            <p>
+                Here's how your resume matches the target job.
+            </p>
+
+        </div>
+
+
+        <!-- MATCH SCORE -->
+        <div class="match-card">
+
+            <div>
+                <small>OVERALL RESUME MATCH</small>
+
+                <h3>Good Match</h3>
+
+                <p>
+                    Your resume has a strong foundation,
+                    but a few areas can be improved.
+                </p>
+            </div>
+
+            <div class="big-score">
+                <strong>78</strong>
+                <span>%</span>
+            </div>
+
+        </div>
+
+
+        <!-- ANALYSIS CARDS -->
+        <div class="results-grid">
+
+            <div class="result-card matching">
+
+                <div class="result-header">
+                    <span class="result-icon">✓</span>
+                    <div>
+                        <small>FOUND IN RESUME</small>
+                        <h3>Matching Skills</h3>
+                    </div>
+                </div>
+
+                <div class="skill-list">
+                    <span>Python</span>
+                    <span>Java</span>
+                    <span>SQL</span>
+                    <span>Git</span>
+                </div>
+
+            </div>
+
+
+            <div class="result-card gaps">
+
+                <div class="result-header">
+                    <span class="result-icon">!</span>
+                    <div>
+                        <small>NEEDS ATTENTION</small>
+                        <h3>Skill Gaps</h3>
+                    </div>
+                </div>
+
+                <div class="skill-list">
+                    <span>React</span>
+                    <span>AWS</span>
+                    <span>Docker</span>
+                </div>
+
+            </div>
+
+
+            <div class="result-card formatting">
+
+                <div class="result-header">
+                    <span class="result-icon">⚠</span>
+                    <div>
+                        <small>IMPROVEMENTS</small>
+                        <h3>Formatting Issues</h3>
+                    </div>
+                </div>
+
+                <ul>
+                    <li>Missing professional summary</li>
+                    <li>Inconsistent bullet points</li>
+                    <li>Resume content is too long</li>
+                </ul>
+
+            </div>
+
+        </div>
+
+
+        <!-- RECOMMENDATIONS -->
+        <div class="recommendations">
+
+            <div class="recommendation-title">
+                <div class="sparkle">✦</div>
+
+                <div>
+                    <small>AI-POWERED SUGGESTIONS</small>
+                    <h3>How to Improve Your Resume</h3>
+                </div>
+            </div>
+
+
+            <div class="recommendation">
+                <span>01</span>
+                <p>
+                    Add relevant technologies such as React, AWS,
+                    or Docker if you have experience with them.
+                </p>
+            </div>
+
+            <div class="recommendation">
+                <span>02</span>
+                <p>
+                    Add a concise professional summary highlighting
+                    your strongest skills and career goals.
+                </p>
+            </div>
+
+            <div class="recommendation">
+                <span>03</span>
+                <p>
+                    Highlight projects that directly relate to
+                    the requirements of the target job.
+                </p>
+            </div>
+
+            <div class="recommendation">
+                <span>04</span>
+                <p>
+                    Keep formatting consistent and use clear,
+                    concise bullet points.
+                </p>
+            </div>
+
+        </div>
+
+
+        <button class="primary-btn" onclick="scrollToAnalyzer()">
+            ← Analyze Another Resume
+        </button>
+
+    </section>
+
+
+    <!-- ABOUT -->
+    <section id="about" class="about">
+
+        <div class="badge">ABOUT THE PROJECT</div>
+
+        <h2>Built for <span>Future Graduates</span></h2>
+
+        <p>
+            ResumeAI is an interactive dashboard concept that helps
+            students understand how closely their resume matches a
+            specific job description and what they can improve.
+        </p>
+
+        <div class="about-grid">
+
+            <div>
+                <strong>01</strong>
+                <h3>Identify Gaps</h3>
+                <p>Find skills missing from your resume.</p>
+            </div>
+
+            <div>
+                <strong>02</strong>
+                <h3>Improve Formatting</h3>
+                <p>Discover common resume presentation issues.</p>
+            </div>
+
+            <div>
+                <strong>03</strong>
+                <h3>Get Recommendations</h3>
+                <p>Receive actionable suggestions for improvement.</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <footer>
+        <div class="logo">Resume<span>AI</span></div>
+        <p>AI-Powered Resume Tailor for Grads • 2026</p>
+    </footer>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
