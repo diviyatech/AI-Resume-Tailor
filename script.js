@@ -1,4 +1,11 @@
 function scrollToAnalyzer() {
+
+    document.getElementById("results").style.display = "none";
+
+    document.getElementById("loading").style.display = "none";
+
+    document.getElementById("analyzer").style.display = "block";
+
     document.getElementById("analyzer").scrollIntoView({
         behavior: "smooth"
     });
