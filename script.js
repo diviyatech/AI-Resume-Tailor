@@ -1,10 +1,5 @@
 function scrollToAnalyzer() {
-    document.getElementById("results").style.display = "none";
-    document.getElementById("loading").style.display = "none";
-
-    const analyzer = document.getElementById("analyzer");
-    analyzer.style.display = "block";
-    analyzer.scrollIntoView({ behavior: "smooth" });
+    showPage("analyzer");
 }
 function showPage(page) {
     const pages = ["home", "analyzer", "about"];
@@ -17,13 +12,17 @@ function showPage(page) {
         }
     });
 
-    document.getElementById("loading").style.display = "none";
-    document.getElementById("results").style.display = "none";
+    const loading = document.getElementById("loading");
+    const results = document.getElementById("results");
+
+    if (loading) loading.style.display = "none";
+    if (results) results.style.display = "none";
 
     const selectedPage = document.getElementById(page);
 
     if (selectedPage) {
         selectedPage.style.display = "block";
+        window.scrollTo(0, 0);
     }
 }
 
