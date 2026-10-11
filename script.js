@@ -6,6 +6,26 @@ function scrollToAnalyzer() {
     analyzer.style.display = "block";
     analyzer.scrollIntoView({ behavior: "smooth" });
 }
+function showPage(page) {
+    const pages = ["home", "analyzer", "about"];
+
+    pages.forEach(function (id) {
+        const section = document.getElementById(id);
+
+        if (section) {
+            section.style.display = "none";
+        }
+    });
+
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("results").style.display = "none";
+
+    const selectedPage = document.getElementById(page);
+
+    if (selectedPage) {
+        selectedPage.style.display = "block";
+    }
+}
 
 function analyzeResume() {
     const resume = document.getElementById("resumeInput").value.trim();
