@@ -4,116 +4,9 @@ function scrollToAnalyzer() {
 
     const analyzer = document.getElementById("analyzer");
     analyzer.style.display = "block";
-
     analyzer.scrollIntoView({ behavior: "smooth" });
 }
 
-
-// Common skills to identify in resumes and job descriptions
-const skillDatabase = [
-    "Python", "Java", "JavaScript", "C++", "C", "SQL",
-    "HTML", "CSS", "React", "Node.js", "Angular",
-    "AWS", "Azure", "Docker", "Git", "GitHub",
-    "Machine Learning", "Data Analysis", "Excel",
-    "Communication", "Problem Solving", "Leadership",
-    "Django", "Flask", "MongoDB", "MySQL",
-    "Power BI", "TensorFlow", "Linux", "REST API",
-    "TypeScript", "PHP", "Spring Boot", "Kubernetes"
-];
-
-
-// Find skills mentioned in text
-function extractSkills(text) {
-    const normalizedText = text.toLowerCase();
-
-    return skillDatabase.filter(skill => {
-        const escapedSkill = skill
-            .toLowerCase()
-            .replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-
-        const pattern = new RegExp(
-            "(^|[^a-z0-9+#.])" +
-            escapedSkill +
-            "(?=$|[^a-z0-9+#.])",
-            "i"
-        );
-
-        return pattern.test(normalizedText);
-    });
-}
-
-
-// Check basic resume formatting
-function checkFormatting(resume) {
-    const issues = [];
-    const text = resume.toLowerCase();
-
-    if (!/\b[\w.+-]+@[\w.-]+\.[a-z]{2,}\b/i.test(resume)) {
-        issues.push("Email address not detected.");
-    }
-
-    if (!/\b(summary|profile|objective)\b/i.test(text)) {
-        issues.push("Professional summary or objective is missing.");
-    }
-
-    if (!/\b(education|qualification|degree)\b/i.test(text)) {
-        issues.push("Education section is missing or not recognized.");
-    }
-
-    if (!/\b(project|projects|experience|internship|internships)\b/i.test(text)) {
-        issues.push("Projects or experience section is missing.");
-    }
-
-    if (resume.trim().length < 250) {
-        issues.push("Resume content is very short. Add relevant details.");
-    }
-
-    if (resume.trim().length > 4000) {
-        issues.push("Resume content is lengthy. Consider making it concise.");
-    }
-
-    if (!/\b(skills|technical skills|core competencies)\b/i.test(text)) {
-        issues.push("A clearly labelled skills section is missing.");
-    }
-
-    return issues;
-}
-
-
-// Safely display text in an HTML element
-function setText(selector, value) {
-    const element = document.querySelector(selector);
-
-    if (element) {
-        element.textContent = value;
-    }
-}
-
-
-// Update a result list
-function updateList(selector, items, emptyMessage) {
-    const container = document.querySelector(selector);
-
-    if (!container) return;
-
-    container.replaceChildren();
-
-    if (items.length === 0) {
-        const li = document.createElement("li");
-        li.textContent = emptyMessage;
-        container.appendChild(li);
-        return;
-    }
-
-    items.forEach(item => {
-        const li = document.createElement("li");
-        li.textContent = item;
-        container.appendChild(li);
-    });
-}
-
-
-// Analyze the resume and job description
 function analyzeResume() {
     const resume = document.getElementById("resumeInput").value.trim();
     const job = document.getElementById("jobInput").value.trim();
@@ -123,169 +16,123 @@ function analyzeResume() {
         return;
     }
 
-    const resumeSkills = extractSkills(resume);
-    const jobSkills = extractSkills(job);
+    const skills = [
+        "HTML", "CSS", "JavaScript", "React", "Python",
+        "Java", "SQL", "Git", "AWS", "Docker", "Node.js",
+        "C++", "C", "Machine Learning", "Communication",
+        "Problem Solving", "Excel", "MongoDB", "Linux",
+        "REST API", "TypeScript"
+    ];
 
-    const matchingSkills = jobSkills.filter(skill =>
-        resumeSkills.includes(skill)
+    const resumeLower = resume.toLowerCase();
+    const jobLower = job.toLowerCase();
+
+    const requiredSkills = skills.filter(skill =>
+        jobLower.includes(skill.toLowerCase())
     );
 
-    const missingSkills = jobSkills.filter(skill =>
-        !resumeSkills.includes(skill)
+    if (requiredSkills.length === 0) {
+        alert("The job description does not contain any recognised skills. Please include technical or professional skills.");
+        return;
+    }
+
+    const matchingSkills = requiredSkills.filter(skill =>
+        resumeLower.includes(skill.toLowerCase())
     );
 
-    // Calculate score using the skills found in the job description.
-    // If no recognized skills are found, use text similarity as a fallback.
-    let score;
+    const missingSkills = requiredSkills.filter(skill =>
+        !resumeLower.includes(skill.toLowerCase())
+    );
 
-    if (jobSkills.length > 0) {
-        score = Math.round(
-            (matchingSkills.length / jobSkills.length) * 100
-        );
-    } else {
-        const resumeWords = new Set(
-            resume.toLowerCase().match(/\b[a-z0-9+#.]+\b/g) || []
-        );
+    const score = Math.round(
+        (matchingSkills.length / requiredSkills.length) * 100
+    );
 
-        const jobWords =
-            job.toLowerCase().match(/\b[a-z0-9+#.]+\b/g) || [];
+    const formattingIssues = [];
 
-        const meaningfulWords = jobWords.filter(
-            word => word.length > 2
-        );
-
-        const uniqueJobWords = [...new Set(meaningfulWords)];
-
-        const commonWords = uniqueJobWords.filter(
-            word => resumeWords.has(word)
-        );
-
-        score = uniqueJobWords.length
-            ? Math.round(
-                commonWords.length / uniqueJobWords.length * 100
-            )
-            : 0;
+    if (!/professional summary|career objective|profile summary/i.test(resume)) {
+        formattingIssues.push("Consider adding a professional summary or career objective.");
     }
 
-    const formattingIssues = checkFormatting(resume);
-
-    const recommendations = [];
-
-    if (missingSkills.length > 0) {
-        recommendations.push(
-            "Review these job requirements: " +
-            missingSkills.join(", ") +
-            ". Add them only if you genuinely have these skills."
-        );
+    if (resume.length < 200) {
+        formattingIssues.push("Your resume may need more details about your education, projects, and experience.");
     }
 
-    if (formattingIssues.length > 0) {
-        recommendations.push(
-            "Improve your resume structure by addressing the formatting issues listed."
-        );
+    if (!/education/i.test(resume)) {
+        formattingIssues.push("Add an Education section.");
     }
 
-    if (!/\b(action|built|developed|created|implemented|improved|designed)\b/i.test(resume)) {
-        recommendations.push(
-            "Describe your projects using action verbs such as developed, built, or implemented."
-        );
+    if (!/project/i.test(resume)) {
+        formattingIssues.push("Consider including relevant academic or personal projects.");
     }
 
-    if (matchingSkills.length > 0) {
-        recommendations.push(
-            "Highlight your matching skills: " +
-            matchingSkills.join(", ") +
-            " in your summary and relevant project descriptions."
-        );
-    }
-
-    if (recommendations.length === 0) {
-        recommendations.push(
-            "Your resume contains the recognized job skills. Review the job requirements and tailor your project descriptions to them."
-        );
-    }
-
-    // Update score
     const scoreElement = document.querySelector(".big-score strong");
-
     if (scoreElement) {
         scoreElement.textContent = score;
     }
 
-    // Update the score circle if the existing design uses one
-    const scoreCircle = document.querySelector(".score-circle");
-
-    if (scoreCircle) {
-        scoreCircle.style.background =
-            `conic-gradient(#8b5cf6 ${score * 3.6}deg, #25243a 0deg)`;
+    const resultHeading = document.querySelector("#results h2");
+    if (resultHeading) {
+        resultHeading.textContent =
+            score >= 75 ? "Good Match" :
+            score >= 40 ? "Moderate Match" :
+            "Needs Improvement";
     }
 
-    // Update the result headings and lists when available
-    updateList(
-        "#results .matching-skills ul",
-        matchingSkills,
-        "No matching skills detected."
-    );
+    const resultText = document.querySelector("#results p");
+    if (resultText) {
+        resultText.textContent =
+            `Your resume matches ${matchingSkills.length} out of ${requiredSkills.length} recognised skills in the job description.`;
+    }
 
-    updateList(
-        "#results .skill-gaps ul",
-        missingSkills,
-        "No missing recognized skills detected."
-    );
+    const cards = document.querySelectorAll("#results .result-card");
 
-    updateList(
-        "#results .formatting-issues ul",
-        formattingIssues,
-        "No basic formatting issues detected."
-    );
+    if (cards.length >= 3) {
+        cards[0].innerHTML = `
+            <h3>Matching Skills</h3>
+            <div class="skill-list">
+                ${matchingSkills.length
+                    ? matchingSkills.map(skill => `<span class="skill-tag">${skill}</span>`).join("")
+                    : "<p>No matching skills found.</p>"}
+            </div>
+        `;
 
-    updateList(
-        "#results .recommendations ul",
-        recommendations,
-        "Review your resume against the job requirements."
-    );
+        cards[1].innerHTML = `
+            <h3>Skill Gaps</h3>
+            <div class="skill-list">
+                ${missingSkills.length
+                    ? missingSkills.map(skill => `<span class="skill-tag">${skill}</span>`).join("")
+                    : "<p>No recognised skill gaps found!</p>"}
+            </div>
+        `;
 
-    // Keep compatibility with the existing loading animation
+        cards[2].innerHTML = `
+            <h3>Formatting Issues</h3>
+            ${formattingIssues.length
+                ? `<ul>${formattingIssues.map(issue => `<li>${issue}</li>`).join("")}</ul>`
+                : "<p>No basic content issues detected.</p>"}
+        `;
+    }
+
+    const recommendations = document.querySelector("#results .recommendations");
+
+    if (recommendations) {
+        recommendations.innerHTML = `
+            <h3>How to Improve Your Resume</h3>
+            <ul>
+                ${missingSkills.length
+                    ? `<li>Highlight relevant experience with: ${missingSkills.join(", ")}. Only include skills you genuinely have.</li>`
+                    : "<li>Your resume includes all recognised skills listed in this job description.</li>"}
+                ${formattingIssues.map(issue => `<li>${issue}</li>`).join("")}
+                <li>Use specific examples from your projects to demonstrate your skills.</li>
+            </ul>
+        `;
+    }
+
     document.getElementById("analyzer").style.display = "none";
+    document.getElementById("loading").style.display = "none";
 
-    const loading = document.getElementById("loading");
-    loading.style.display = "block";
-    loading.scrollIntoView({ behavior: "smooth" });
-
-    const loadingText = document.getElementById("loadingText");
-
-    const steps = document.querySelectorAll(".loading-step");
-
-    const messages = [
-        "Scanning resume content...",
-        "Comparing job requirements...",
-        "Detecting skill gaps...",
-        "Generating recommendations..."
-    ];
-
-    steps.forEach(step => step.classList.remove("active"));
-
-    let currentStep = 0;
-
-    loadingText.textContent = messages[0];
-
-    const interval = setInterval(() => {
-        if (currentStep < steps.length) {
-            steps[currentStep].classList.add("active");
-            loadingText.textContent =
-                messages[Math.min(currentStep, messages.length - 1)];
-
-            currentStep++;
-        } else {
-            clearInterval(interval);
-
-            setTimeout(() => {
-                loading.style.display = "none";
-
-                const results = document.getElementById("results");
-                results.style.display = "block";
-                results.scrollIntoView({ behavior: "smooth" });
-            }, 500);
-        }
-    }, 700);
+    const results = document.getElementById("results");
+    results.style.display = "block";
+    results.scrollIntoView({ behavior: "smooth" });
 }
